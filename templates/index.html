@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+
+<style>
+    ul {
+        list-style: none;
+    }
+
+    .element {
+        width: 5%;
+    }
+</style>
+
+<head>
+    <title> Вектора </title>
+</head>
+
+<body>
+    <form action="{{ url_for('index') }}" method="get">
+        <p><label>Размер векторов<input type="number" min="2" max="4" name="size" value="{{ size }}"></label></p>
+        <ul>
+            <li>Вектор A: <input class="element" type="number" name="a1" value="{{ a1 }}"><input class="element"
+                    type="number" name="a2" value="{{ a2 }}"><input class="element" type="number" name="a3"
+                    value="{{ a3 }}"><input class="element" type="number" name="a4" value="{{ a4 }}"></li>
+            <li>Вектор B: <input class="element" type="number" name="b1" value="{{ b1 }}"><input class="element"
+                    type="number" name="b2" value="{{ b2 }}"><input class="element" type="number" name="b3"
+                    value="{{ b3 }}"><input class="element" type="number" name="b4" value="{{ b4 }}"></li>
+        </ul>
+        <ul>
+            <li><label><input type="radio" name="op" {% if op=='m' %} checked {% endif %} value="m">Скалярное
+                    произведение</label></li>
+            <li><label><input type="radio" name="op" {% if op=='d' %} checked {% endif %} value="d">Разность</label>
+            </li>
+            <li><label><input type="radio" name="op" {% if op=='a' %} checked {% endif %} value="a">Угол между
+                    векторами</label></li>
+        </ul>
+        <p><input type="submit" value="Вычислить"></p>
+        {% if req %}
+        <hr>
+        <p>Результат:</p>
+        <p>
+            {% if op in ['m', 'a'] %}
+            {{ result }}
+            {% elif op == 'd' %}
+            {{ ', '.join(result) }}
+            {% endif %}
+            {% endif %}
+        </p>
+    </form>
+</body>
