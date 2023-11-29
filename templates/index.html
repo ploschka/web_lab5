@@ -18,13 +18,19 @@
 <body>
     <form action="{{ url_for('index') }}" method="get">
         <p><label>Размер векторов<input type="number" min="2" max="4" name="size" value="{{ size }}"></label></p>
+        <input type="submit" value="Показать" name="show">
+        {% if render_vec %}
         <ul>
-            <li>Вектор A: <input class="element" type="number" name="a1" value="{{ a1 }}"><input class="element"
-                    type="number" name="a2" value="{{ a2 }}"><input class="element" type="number" name="a3"
-                    value="{{ a3 }}"><input class="element" type="number" name="a4" value="{{ a4 }}"></li>
-            <li>Вектор B: <input class="element" type="number" name="b1" value="{{ b1 }}"><input class="element"
-                    type="number" name="b2" value="{{ b2 }}"><input class="element" type="number" name="b3"
-                    value="{{ b3 }}"><input class="element" type="number" name="b4" value="{{ b4 }}"></li>
+            <li>Вектор A:
+                {% for e in A %}
+                <input class="element" type="number" name="a" value="{{ e }}">
+                {% endfor %}
+            </li>
+            <li>Вектор B:
+                {% for e in B %}
+                <input class="element" type="number" name="b" value="{{ e }}">
+                {% endfor %}
+            </li>
         </ul>
         <ul>
             <li><label><input type="radio" name="op" {% if op=='m' %} checked {% endif %} value="m">Скалярное
@@ -35,7 +41,7 @@
                     векторами</label></li>
         </ul>
         <p><input type="submit" value="Вычислить"><input type="reset" value="Очистить"></p>
-        {% if req %}
+        {% if result %}
         <hr>
         <p>Результат:</p>
         <p>
@@ -46,5 +52,7 @@
             {% endif %}
             {% endif %}
         </p>
+        {% endif %}
     </form>
+
 </body>

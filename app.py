@@ -6,47 +6,55 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     req = bool(request.values)
-    size = request.values.get('size', 2, int)
-    a1 = request.values.get('a1', 0, int)
-    a2 = request.values.get('a2', 0, int)
-    a3 = request.values.get('a3', 0, int)
-    a4 = request.values.get('a4', 0, int)
+    size = min(request.values.get('size', 2, int), 4)
+    show = request.values.get('show', False, bool)
+    render_vec = size > 0 and req
+    A = request.values.getlist('a', int)
+    B = request.values.getlist('b', int)
 
-    b1 = request.values.get('b1', 0, int)
-    b2 = request.values.get('b2', 0, int)
-    b3 = request.values.get('b3', 0, int)
-    b4 = request.values.get('b4', 0, int)
+    v = len(A) > 0 and len(B) > 0
 
-    Av = [a1, a2, a3, a4]
-    Bv = [b1, b2, b3, b4]
+    if show:
+        A = [0]*size
+        B = [0]*size
 
+    result = None
     op = request.values.get('op', 'm')
 
-    if op == 'm':
-        result = sum([a * b for a, b in [(Av[i], Bv[i]) for i in range(size)]])
-    elif op == 'd':
-        result = map(str, [Bv[i] - Av[i] for i in range(size)])
-    elif op == 'a':
-        m = sum([a * b for a, b in [(Av[i], Bv[i]) for i in range(size)]])
-        ma = sqrt(sum([i*i for i in [Av[j] for j in range(size)]]))
-        mb = sqrt(sum([i*i for i in [Bv[j] for j in range(size)]]))
-        result = "%.2f" % degrees(acos(m / (ma * mb)))
-    else:
-        result = 'ОШИБКА!!!'
+    if not show:
+        if v:
+            if op == 'm':
+                result = sum([a * b for a, b in [(A[i], B[i])
+                            for i in range(size)]])
+            elif op == 'd':
+                result = map(str, [B[i] - A[i] for i in range(size)])
+            elif op == 'a':
+                m = sum([a * b for a, b in [(A[i], B[i]) for i in range(size)]])
+                ma = sqrt(sum([i*i for i in [A[j] for j in range(size)]]))
+                mb = sqrt(sum([i*i for i in [B[j] for j in range(size)]]))
+                result = "%.2f" % degrees(acos(m / (ma * mb)))
+            else:
+                result = 'ОШИБКА!!!'
 
     html = render_template(
         'index.html',
+        render_vec=render_vec,
         size=size,
-        a1=a1,
-        a2=a2,
-        a3=a3,
-        a4=a4,
-        b1=b1,
-        b2=b2,
-        b3=b3,
-        b4=b4,
+        A=A,
+        B=B,
         op=op,
         result=result,
         req=req
+    )
+
+    print(
+        render_vec,
+        size,
+        v,
+        A,
+        B,
+        op,
+        result,
+        req
     )
     return html
